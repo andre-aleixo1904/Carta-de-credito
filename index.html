@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleção de Carta de Crédito</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3 class="sidebar-title">Protótipo</h3>
+        <p class="sidebar-subtitle">Seleção de Carta de Crédito</p>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-section-title">Versões</p>
+
+        <button class="version-card active" data-version="3">
+          <div class="version-card-header">
+            <span class="version-badge final">Final</span>
+            <span class="version-card-name">Versão 3</span>
+          </div>
+          <p class="version-card-desc">Forma de pagamento adicional (Cartão de Crédito ou PIX) com qualquer carta selecionada</p>
+        </button>
+
+        <div class="sidebar-backup-label">Backup</div>
+
+        <button class="version-card" data-version="2">
+          <div class="version-card-header">
+            <span class="version-badge backup">V2</span>
+            <span class="version-card-name">Versão 2</span>
+          </div>
+          <p class="version-card-desc">Cartão de crédito habilita assim que qualquer carta é selecionada</p>
+        </button>
+
+        <button class="version-card" data-version="1">
+          <div class="version-card-header">
+            <span class="version-badge backup">V1</span>
+            <span class="version-card-name">Versão 1</span>
+          </div>
+          <p class="version-card-desc">Cartão de crédito só habilita quando todas as cartas estão selecionadas</p>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="scenario-nav-area">
+        <div class="scenario-nav-row">
+          <p class="scenario-nav-label">Cenários:</p>
+          <button class="scenario-btn active" data-scenario="1">1 carta crédito total</button>
+          <button class="scenario-btn" data-scenario="2">2 cartas com crédito total</button>
+          <button class="scenario-btn" data-scenario="4">2 cartas sem crédito total</button>
+        </div>
+        <div class="scenario-info-bar" id="scenarioInfo"></div>
+      </div>
+
+      <div class="card-container" id="cardContainer">
+        <!-- Title -->
+        <h2 class="card-title">Selecione sua carta de crédito</h2>
+
+      <!-- Container -->
+      <div class="container">
+        <!-- Carta 442 -->
+        <div class="form-section" id="carta442Section">
+          <div class="divider"></div>
+          <div class="carta-row" id="carta442Row" data-carta="442">
+            <div class="checkbox-wrapper" id="checkbox442">
+              <div class="checkbox default" id="cb442"></div>
+            </div>
+            <div class="forma-pagamento">
+              <svg class="icon-pagamento" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="#242424" stroke-width="1.5"/>
+                <path d="M2 10h20" stroke="#242424" stroke-width="1.5"/>
+                <rect x="5" y="14" width="6" height="2" rx="1" fill="#242424"/>
+              </svg>
+              <p class="carta-info">
+                <span class="info-dark">Carta 442</span>
+                <span class="info-separator">  |   </span>
+                <span class="info-dark">Crédito Disponível R$ <span id="carta442Credit">20.000,00</span></span>
+                <span class="info-utilizar" id="carta442Utilizar" style="display:none">
+                  <span class="info-separator">  |   </span>
+                  <span class="info-gray">A utilizar R$ <span id="carta442UtilizarVal">0,00</span></span>
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <!-- Carta 469 -->
+        <div class="carta-row-wrapper" id="carta469Section">
+          <div class="carta-row" id="carta469Row" data-carta="469">
+            <div class="checkbox-wrapper" id="checkbox469">
+              <div class="checkbox default" id="cb469"></div>
+            </div>
+            <div class="forma-pagamento">
+              <svg class="icon-pagamento" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="#242424" stroke-width="1.5"/>
+                <path d="M2 10h20" stroke="#242424" stroke-width="1.5"/>
+                <rect x="5" y="14" width="6" height="2" rx="1" fill="#242424"/>
+              </svg>
+              <p class="carta-info">
+                <span class="info-dark">Carta 469</span>
+                <span class="info-separator">   |   </span>
+                <span class="info-dark">Crédito Disponível R$ <span id="carta469Credit">8.000,00</span></span>
+                <span class="info-utilizar" id="carta469Utilizar" style="display:none">
+                  <span class="info-separator">  |   </span>
+                  <span class="info-gray">A utilizar R$ <span id="carta469UtilizarVal">0,00</span></span>
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+
+        <!-- V1/V2: Adicionar cartão de crédito -->
+        <div class="carta-row-wrapper" id="creditCardSection">
+          <div class="carta-row" id="creditCardRow">
+            <div class="checkbox-wrapper" id="checkboxCC">
+              <div class="checkbox disabled" id="cbCC"></div>
+            </div>
+            <div class="forma-pagamento">
+              <svg class="icon-add" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="iconAdd">
+                <circle cx="12" cy="12" r="9" stroke="#a6a6a6" stroke-width="1.5"/>
+                <path d="M12 8v8M8 12h8" stroke="#a6a6a6" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <svg class="icon-add" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="iconAddActive" style="display:none">
+                <circle cx="12" cy="12" r="9" stroke="#047fe4" stroke-width="1.5"/>
+                <path d="M12 8v8M8 12h8" stroke="#047fe4" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <p class="carta-info" id="ccLabel">
+                <span class="info-gray">Adicionar cartão de crédito</span>
+              </p>
+              <p class="carta-info" id="ccLabelActive" style="display:none">
+                <span class="info-link">Adicionar cartão de crédito</span>
+                <span class="info-separator">   |   </span>
+                <span class="info-dark">Valor a pagar R$ <span id="ccValorPagar">0,00</span></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Credit Card Form -->
+          <div class="credit-card-form" id="creditCardForm" style="display:none">
+            <div class="card-flags">
+              <div class="flag-badge">
+                <svg width="36" height="24" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="white" stroke="#ebebeb"/><text x="18" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#000">ELO</text></svg>
+              </div>
+              <div class="flag-badge">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
+              </div>
+              <div class="flag-badge">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><circle cx="14" cy="12" r="7" fill="#eb001b"/><circle cx="21" cy="12" r="7" fill="#f79e1b"/><path d="M17.5 7.5a7 7 0 000 9" fill="#ff5f00"/></svg>
+              </div>
+              <div class="flag-badge amex">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="#1f72cd" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="7" font-weight="bold" fill="white">AMEX</text></svg>
+              </div>
+            </div>
+
+            <div class="form-fields">
+              <div class="input-wrapper" id="titularWrapper">
+                <div class="input-field" id="titularField">
+                  <div class="input-content">
+                    <span class="input-placeholder" id="titularPlaceholder">Titular do cartão</span>
+                    <div class="input-filled" id="titularFilled" style="display:none">
+                      <span class="input-label-small">Titular do Cartão</span>
+                      <span class="input-value" id="titularValue">Antonio Oliveira</span>
+                    </div>
+                  </div>
+                  <input type="text" class="hidden-input" id="titularInput" placeholder="Titular do cartão">
+                </div>
+              </div>
+
+              <div class="input-wrapper" id="numeroWrapper">
+                <div class="input-field" id="numeroField">
+                  <div class="input-content">
+                    <span class="input-placeholder" id="numeroPlaceholder">Numero do Cartão</span>
+                    <div class="input-filled" id="numeroFilled" style="display:none">
+                      <span class="input-label-small">Numero do Cartão</span>
+                      <div class="input-with-flag">
+                        <span class="input-value" id="numeroValue">4917 6100 0000 4599</span>
+                        <div class="flag-badge-small">
+                          <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="text" class="hidden-input" id="numeroInput" placeholder="Numero do Cartão">
+                </div>
+              </div>
+
+              <div class="date-section">
+                <p class="date-label">Data de validade</p>
+                <div class="date-fields">
+                  <div class="combo-box" id="mesCombo">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="mesPlaceholder">Mês</span>
+                      <div class="combo-filled" id="mesFilled" style="display:none">
+                        <span class="combo-label-small">Mês</span>
+                        <span class="combo-value" id="mesValue">10</span>
+                      </div>
+                    </div>
+                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="combo-box" id="anoCombo">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="anoPlaceholder">Ano</span>
+                      <div class="combo-filled" id="anoFilled" style="display:none">
+                        <span class="combo-label-small">Ano</span>
+                        <span class="combo-value" id="anoValue">2026</span>
+                      </div>
+                    </div>
+                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="combo-box" id="cvvCombo">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="cvvPlaceholder">CVV</span>
+                      <div class="combo-filled" id="cvvFilled" style="display:none">
+                        <span class="combo-label-small">CVV</span>
+                        <span class="combo-value" id="cvvValue">123</span>
+                      </div>
+                    </div>
+                    <svg class="combo-info" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#242424" stroke-width="1"/><circle cx="8" cy="5.5" r="0.75" fill="#242424"/><path d="M8 7.5v4" stroke="#242424" stroke-width="1" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+        </div>
+
+        <!-- V3: Adicionar forma de pagamento -->
+        <div class="carta-row-wrapper" id="v3PaymentSection" style="display:none">
+          <div class="carta-row" id="v3PaymentRow">
+            <div class="checkbox-wrapper">
+              <div class="checkbox disabled" id="cbV3"></div>
+            </div>
+            <div class="forma-pagamento">
+              <svg class="icon-add" width="24" height="24" viewBox="0 0 24 24" fill="none" id="iconAddV3">
+                <circle cx="12" cy="12" r="9" stroke="#a6a6a6" stroke-width="1.5"/>
+                <path d="M12 8v8M8 12h8" stroke="#a6a6a6" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <svg class="icon-add" width="24" height="24" viewBox="0 0 24 24" fill="none" id="iconAddV3Active" style="display:none">
+                <circle cx="12" cy="12" r="9" stroke="#047fe4" stroke-width="1.5"/>
+                <path d="M12 8v8M8 12h8" stroke="#047fe4" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <p class="carta-info" id="v3Label">
+                <span class="info-gray">Adicionar forma de pagamento</span>
+              </p>
+              <p class="carta-info" id="v3LabelActive" style="display:none">
+                <span class="info-link">Adicionar forma de pagamento</span>
+                <span class="info-separator">   |   </span>
+                <span class="info-dark">Valor a pagar R$ <span id="v3ValorPagar">0,00</span></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Payment Type Selector -->
+          <div class="payment-type-selector" id="paymentTypeSelector" style="display:none">
+            <div class="payment-type-options" id="paymentTypeOptions">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- V3 Credit Card Form (reuses same structure) -->
+          <div class="credit-card-form" id="v3CreditCardForm" style="display:none">
+            <div class="card-flags">
+              <div class="flag-badge">
+                <svg width="36" height="24" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="white" stroke="#ebebeb"/><text x="18" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#000">ELO</text></svg>
+              </div>
+              <div class="flag-badge">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
+              </div>
+              <div class="flag-badge">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><circle cx="14" cy="12" r="7" fill="#eb001b"/><circle cx="21" cy="12" r="7" fill="#f79e1b"/><path d="M17.5 7.5a7 7 0 000 9" fill="#ff5f00"/></svg>
+              </div>
+              <div class="flag-badge amex">
+                <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="#1f72cd" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="7" font-weight="bold" fill="white">AMEX</text></svg>
+              </div>
+            </div>
+            <div class="form-fields">
+              <div class="input-wrapper">
+                <div class="input-field">
+                  <div class="input-content">
+                    <span class="input-placeholder" id="v3TitularPlaceholder">Titular do cartão</span>
+                    <div class="input-filled" id="v3TitularFilled" style="display:none">
+                      <span class="input-label-small">Titular do Cartão</span>
+                      <span class="input-value">Antonio Oliveira</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="input-wrapper">
+                <div class="input-field">
+                  <div class="input-content">
+                    <span class="input-placeholder" id="v3NumeroPlaceholder">Numero do Cartão</span>
+                    <div class="input-filled" id="v3NumeroFilled" style="display:none">
+                      <span class="input-label-small">Numero do Cartão</span>
+                      <div class="input-with-flag">
+                        <span class="input-value">4917 6100 0000 4599</span>
+                        <div class="flag-badge-small">
+                          <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="date-section">
+                <p class="date-label">Data de validade</p>
+                <div class="date-fields">
+                  <div class="combo-box">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="v3MesPlaceholder">Mês</span>
+                      <div class="combo-filled" id="v3MesFilled" style="display:none">
+                        <span class="combo-label-small">Mês</span>
+                        <span class="combo-value">10</span>
+                      </div>
+                    </div>
+                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="combo-box">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="v3AnoPlaceholder">Ano</span>
+                      <div class="combo-filled" id="v3AnoFilled" style="display:none">
+                        <span class="combo-label-small">Ano</span>
+                        <span class="combo-value">2026</span>
+                      </div>
+                    </div>
+                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="combo-box">
+                    <div class="combo-content">
+                      <span class="combo-placeholder" id="v3CvvPlaceholder">CVV</span>
+                      <div class="combo-filled" id="v3CvvFilled" style="display:none">
+                        <span class="combo-label-small">CVV</span>
+                        <span class="combo-value">123</span>
+                      </div>
+                    </div>
+                    <svg class="combo-info" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#242424" stroke-width="1"/><circle cx="8" cy="5.5" r="0.75" fill="#242424"/><path d="M8 7.5v4" stroke="#242424" stroke-width="1" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- V3 PIX Section -->
+          <div class="pix-section" id="v3PixSection" style="display:none">
+            <div class="pix-content">
+              <div class="pix-brand-icon">
+                <svg width="40" height="40" viewBox="0 0 512 512" fill="#32BCAD">
+                  <path d="M242.4 292.5C247.8 287.1 257.1 287.1 262.5 292.5L339.5 369.5C353.7 383.7 372.6 391.5 392.6 391.5H407.7L310.6 488.6C280.3 518.1 231.1 518.1 200.8 488.6L103.3 391.2H112.6C132.6 391.2 151.5 383.4 165.7 369.2L242.4 292.5zM262.5 218.9C256.1 224.4 247.9 224.5 242.4 218.9L165.7 142.2C151.5 127.1 132.6 120.2 112.6 120.2H103.3L200.7 22.76C231.1-7.586 280.3-7.586 310.6 22.76L407.8 119.9H392.6C372.6 119.9 353.7 127.7 339.5 141.9L262.5 218.9zM112.6 142.7C126.4 142.7 139.1 148.3 149.7 158.1L226.4 234.8C233.6 241.1 243 245.6 252.5 245.6C261.9 245.6 271.3 241.1 278.5 234.8L355.5 157.8C365.3 148.1 378.8 142.5 392.6 142.5H430.3L488.6 200.8C518.9 231.1 518.9 280.3 488.6 310.6L430.3 368.9H392.6C378.8 368.9 365.3 363.3 355.5 353.5L278.5 276.5C264.6 262.6 240.3 262.6 226.4 276.6L149.7 353.2C139.1 363 126.4 368.6 112.6 368.6H80.78L22.76 310.6C-7.586 280.3-7.586 231.1 22.76 200.8L80.78 142.7H112.6z"/>
+                </svg>
+              </div>
+              <div class="pix-info">
+                <p class="pix-info-title">Pague com PIX</p>
+                <p class="pix-info-desc">Quando finalizar a compra, nós geraremos o código QR para você copiar ou escanear. Também te enviaremos por e-mail.</p>
+                <p class="pix-info-valor">Valor: R$ <span id="v3PixValor">0,00</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <!-- Feedback Messages -->
+      <div class="feedback-success" id="feedbackSuccess" style="display:none">
+        <svg class="feedback-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" fill="#079f28"/>
+          <path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="feedback-text-success">
+          <p class="feedback-title" id="successTitle">Pagamento totalmente coberto com cartas de crédito.</p>
+          <p class="feedback-subtitle">Você pode finalizar sua reserva.</p>
+        </div>
+      </div>
+
+      <div class="feedback-alert" id="feedbackAlert" style="display:none">
+        <svg class="feedback-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L2 20h20L12 3z" fill="#dc6e00"/>
+          <path d="M12 10v4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="17" r="1" fill="white"/>
+        </svg>
+        <div class="feedback-text-alert">
+          <p class="feedback-title" id="alertTitle">Ainda faltam R$ 0,00 para concluir o pagamento.</p>
+          <p class="feedback-subtitle" id="alertSubtitle">Você pode adicionar mais cartas.</p>
+        </div>
+      </div>
+    </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
