@@ -192,69 +192,40 @@
             </div>
 
             <div class="form-fields">
-              <div class="input-wrapper" id="titularWrapper">
-                <div class="input-field" id="titularField">
-                  <div class="input-content">
-                    <span class="input-placeholder" id="titularPlaceholder">Titular do cartão</span>
-                    <div class="input-filled" id="titularFilled" style="display:none">
-                      <span class="input-label-small">Titular do Cartão</span>
-                      <span class="input-value" id="titularValue">Antonio Oliveira</span>
-                    </div>
-                  </div>
-                  <input type="text" class="hidden-input" id="titularInput" placeholder="Titular do cartão">
+              <div class="input-wrapper">
+                <div class="input-field">
+                  <input type="text" class="cc-input" id="titularInput" placeholder="Titular do cartão" autocomplete="off">
                 </div>
               </div>
 
-              <div class="input-wrapper" id="numeroWrapper">
-                <div class="input-field" id="numeroField">
-                  <div class="input-content">
-                    <span class="input-placeholder" id="numeroPlaceholder">Numero do Cartão</span>
-                    <div class="input-filled" id="numeroFilled" style="display:none">
-                      <span class="input-label-small">Numero do Cartão</span>
-                      <div class="input-with-flag">
-                        <span class="input-value" id="numeroValue">4917 6100 0000 4599</span>
-                        <div class="flag-badge-small">
-                          <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <input type="text" class="hidden-input" id="numeroInput" placeholder="Numero do Cartão">
+              <div class="input-wrapper">
+                <div class="input-field">
+                  <input type="text" class="cc-input" id="numeroInput" placeholder="Número do cartão" maxlength="19" autocomplete="off">
                 </div>
               </div>
 
               <div class="date-section">
                 <p class="date-label">Data de validade</p>
                 <div class="date-fields">
-                  <div class="combo-box" id="mesCombo">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="mesPlaceholder">Mês</span>
-                      <div class="combo-filled" id="mesFilled" style="display:none">
-                        <span class="combo-label-small">Mês</span>
-                        <span class="combo-value" id="mesValue">10</span>
-                      </div>
-                    </div>
-                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="combo-box">
+                    <select class="cc-select" id="mesInput">
+                      <option value="" disabled selected>Mês</option>
+                      <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                      <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                      <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                      <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                    </select>
                   </div>
-                  <div class="combo-box" id="anoCombo">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="anoPlaceholder">Ano</span>
-                      <div class="combo-filled" id="anoFilled" style="display:none">
-                        <span class="combo-label-small">Ano</span>
-                        <span class="combo-value" id="anoValue">2026</span>
-                      </div>
-                    </div>
-                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="combo-box">
+                    <select class="cc-select" id="anoInput">
+                      <option value="" disabled selected>Ano</option>
+                      <option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option>
+                      <option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option>
+                      <option value="2031">2031</option><option value="2032">2032</option><option value="2033">2033</option>
+                    </select>
                   </div>
-                  <div class="combo-box" id="cvvCombo">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="cvvPlaceholder">CVV</span>
-                      <div class="combo-filled" id="cvvFilled" style="display:none">
-                        <span class="combo-label-small">CVV</span>
-                        <span class="combo-value" id="cvvValue">123</span>
-                      </div>
-                    </div>
-                    <svg class="combo-info" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#242424" stroke-width="1"/><circle cx="8" cy="5.5" r="0.75" fill="#242424"/><path d="M8 7.5v4" stroke="#242424" stroke-width="1" stroke-linecap="round"/></svg>
+                  <div class="combo-box">
+                    <input type="text" class="cc-input" id="cvvInput" placeholder="CVV" maxlength="4" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -316,63 +287,36 @@
             <div class="form-fields">
               <div class="input-wrapper">
                 <div class="input-field">
-                  <div class="input-content">
-                    <span class="input-placeholder" id="v3TitularPlaceholder">Titular do cartão</span>
-                    <div class="input-filled" id="v3TitularFilled" style="display:none">
-                      <span class="input-label-small">Titular do Cartão</span>
-                      <span class="input-value">Antonio Oliveira</span>
-                    </div>
-                  </div>
+                  <input type="text" class="cc-input" id="v3TitularInput" placeholder="Titular do cartão" autocomplete="off">
                 </div>
               </div>
               <div class="input-wrapper">
                 <div class="input-field">
-                  <div class="input-content">
-                    <span class="input-placeholder" id="v3NumeroPlaceholder">Numero do Cartão</span>
-                    <div class="input-filled" id="v3NumeroFilled" style="display:none">
-                      <span class="input-label-small">Numero do Cartão</span>
-                      <div class="input-with-flag">
-                        <span class="input-value">4917 6100 0000 4599</span>
-                        <div class="flag-badge-small">
-                          <svg width="35" height="24" viewBox="0 0 35 24"><rect width="35" height="24" rx="2" fill="white" stroke="#ebebeb"/><text x="17.5" y="15" text-anchor="middle" font-size="8" font-weight="bold" fill="#1a1f71">VISA</text></svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <input type="text" class="cc-input" id="v3NumeroInput" placeholder="Número do cartão" maxlength="19" autocomplete="off">
                 </div>
               </div>
               <div class="date-section">
                 <p class="date-label">Data de validade</p>
                 <div class="date-fields">
                   <div class="combo-box">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="v3MesPlaceholder">Mês</span>
-                      <div class="combo-filled" id="v3MesFilled" style="display:none">
-                        <span class="combo-label-small">Mês</span>
-                        <span class="combo-value">10</span>
-                      </div>
-                    </div>
-                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <select class="cc-select" id="v3MesInput">
+                      <option value="" disabled selected>Mês</option>
+                      <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                      <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                      <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                      <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                    </select>
                   </div>
                   <div class="combo-box">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="v3AnoPlaceholder">Ano</span>
-                      <div class="combo-filled" id="v3AnoFilled" style="display:none">
-                        <span class="combo-label-small">Ano</span>
-                        <span class="combo-value">2026</span>
-                      </div>
-                    </div>
-                    <svg class="combo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="#242424" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <select class="cc-select" id="v3AnoInput">
+                      <option value="" disabled selected>Ano</option>
+                      <option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option>
+                      <option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option>
+                      <option value="2031">2031</option><option value="2032">2032</option><option value="2033">2033</option>
+                    </select>
                   </div>
                   <div class="combo-box">
-                    <div class="combo-content">
-                      <span class="combo-placeholder" id="v3CvvPlaceholder">CVV</span>
-                      <div class="combo-filled" id="v3CvvFilled" style="display:none">
-                        <span class="combo-label-small">CVV</span>
-                        <span class="combo-value">123</span>
-                      </div>
-                    </div>
-                    <svg class="combo-info" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#242424" stroke-width="1"/><circle cx="8" cy="5.5" r="0.75" fill="#242424"/><path d="M8 7.5v4" stroke="#242424" stroke-width="1" stroke-linecap="round"/></svg>
+                    <input type="text" class="cc-input" id="v3CvvInput" placeholder="CVV" maxlength="4" autocomplete="off">
                   </div>
                 </div>
               </div>

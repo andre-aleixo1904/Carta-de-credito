@@ -514,7 +514,7 @@ body {
   border: 1px solid #d3d3d3;
   border-radius: 8px;
   height: 48px;
-  padding: 8px 12px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -526,64 +526,44 @@ body {
   border-color: #047fe4;
 }
 
-.input-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.input-placeholder {
-  font-size: 14px;
-  font-weight: 400;
-  color: #a6a6a6;
-  line-height: normal;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.input-filled {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.input-label-small {
-  font-size: 11px;
-  font-weight: 400;
-  color: #a6a6a6;
-  line-height: normal;
-}
-
-.input-value {
+/* Real input fields */
+.cc-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: #242424;
   line-height: normal;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.input-with-flag {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+.cc-input::placeholder {
+  color: #a6a6a6;
+  font-weight: 400;
 }
 
-.flag-badge-small svg {
-  display: block;
+/* Real select fields */
+.cc-select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #242424;
+  line-height: normal;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.hidden-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+.cc-select:invalid,
+.cc-select option[value=""] {
+  color: #a6a6a6;
 }
 
 /* Date Section */
@@ -612,7 +592,7 @@ body {
   border: 1px solid #d3d3d3;
   border-radius: 8px;
   height: 48px;
-  padding: 12px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -624,44 +604,8 @@ body {
   border-color: #a6a6a6;
 }
 
-.combo-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.combo-placeholder {
-  font-size: 14px;
-  font-weight: 400;
-  color: #a6a6a6;
-  line-height: 20px;
-}
-
-.combo-filled {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.combo-label-small {
-  font-size: 11px;
-  font-weight: 400;
-  color: #a6a6a6;
-  line-height: normal;
-}
-
-.combo-value {
-  font-size: 14px;
-  font-weight: 400;
-  color: #242424;
-  line-height: 20px;
-}
-
-.combo-arrow,
-.combo-info {
-  flex-shrink: 0;
+.combo-box:focus-within {
+  border-color: #047fe4;
 }
 
 /* (Scenario info bar moved to sidebar-scenarios as scenario-detail) */
