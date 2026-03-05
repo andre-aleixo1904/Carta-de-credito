@@ -526,6 +526,11 @@ body {
   border-color: #047fe4;
 }
 
+/* Floating label container */
+.cc-floating {
+  position: relative;
+}
+
 /* Real input fields */
 .cc-input {
   width: 100%;
@@ -537,11 +542,51 @@ body {
   font-weight: 400;
   color: #242424;
   line-height: normal;
+  padding: 14px 0 0 0;
 }
 
 .cc-input::placeholder {
-  color: #a6a6a6;
+  color: transparent;
+}
+
+/* Floating label */
+.cc-label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 400;
+  color: #a6a6a6;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  transform-origin: left top;
+}
+
+/* Label floats up when input has value or is focused */
+.cc-input:focus ~ .cc-label,
+.cc-input:not(:placeholder-shown) ~ .cc-label {
+  top: 8px;
+  transform: translateY(0);
+  font-size: 11px;
+}
+
+/* Select label floats when has value */
+.cc-label-select {
+  left: 12px;
+}
+
+.cc-select.has-value ~ .cc-label-select {
+  top: 8px;
+  transform: translateY(0);
+  font-size: 11px;
+}
+
+/* Input padding when label floats */
+.cc-floating .cc-input:focus,
+.cc-floating .cc-input:not(:placeholder-shown) {
+  padding-top: 18px;
 }
 
 /* Real select fields */
@@ -553,17 +598,35 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  color: #242424;
+  color: transparent;
   line-height: normal;
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  padding: 0;
 }
 
-.cc-select:invalid,
-.cc-select option[value=""] {
-  color: #a6a6a6;
+.cc-select.has-value {
+  color: #242424;
+  padding-top: 18px;
+}
+
+/* Card type badge (VISA etc.) */
+.cc-card-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.cc-card-badge svg {
+  display: block;
+}
+
+/* Combo box icons */
+.combo-arrow,
+.combo-info {
+  flex-shrink: 0;
 }
 
 /* Date Section */

@@ -311,8 +311,13 @@ function clearCCFields() {
   ['titularInput', 'numeroInput', 'cvvInput'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('mesInput').selectedIndex = 0;
-  document.getElementById('anoInput').selectedIndex = 0;
+  ['mesInput', 'anoInput'].forEach(id => {
+    const el = document.getElementById(id);
+    el.selectedIndex = 0;
+    el.classList.remove('has-value');
+  });
+  const badge = document.getElementById('numeroBadge');
+  if (badge) badge.style.display = 'none';
 }
 
 // Clear V3 credit card fields
@@ -320,8 +325,30 @@ function clearV3CCFields() {
   ['v3TitularInput', 'v3NumeroInput', 'v3CvvInput'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('v3MesInput').selectedIndex = 0;
-  document.getElementById('v3AnoInput').selectedIndex = 0;
+  ['v3MesInput', 'v3AnoInput'].forEach(id => {
+    const el = document.getElementById(id);
+    el.selectedIndex = 0;
+    el.classList.remove('has-value');
+  });
+  const badge = document.getElementById('v3NumeroBadge');
+  if (badge) badge.style.display = 'none';
+}
+
+// Update select visual state (floating label)
+function updateSelectState(selectEl) {
+  if (selectEl.value) {
+    selectEl.classList.add('has-value');
+  } else {
+    selectEl.classList.remove('has-value');
+  }
+}
+
+// Update card number badge visibility
+function updateCardBadge(inputEl, badgeId) {
+  const badge = document.getElementById(badgeId);
+  if (!badge) return;
+  const digits = inputEl.value.replace(/\D/g, '');
+  badge.style.display = digits.length >= 4 ? 'flex' : 'none';
 }
 
 // Format card number with spaces (0000 0000 0000 0000)
@@ -340,14 +367,21 @@ function formatCVV(input) {
 // Handle credit card field input - update filled state and re-render feedback
 function onCCFieldInput() {
   if (state.version === 3) return;
+  updateCardBadge(document.getElementById('numeroInput'), 'numeroBadge');
   state.creditCard.filled = areCCFieldsFilled();
   renderFeedback();
 }
 
 function onV3CCFieldInput() {
   if (state.version !== 3) return;
+  updateCardBadge(document.getElementById('v3NumeroInput'), 'v3NumeroBadge');
   state.additionalPayment.filled = areV3CCFieldsFilled();
   renderFeedback();
+}
+
+function onSelectChange(selectEl, fieldInputFn) {
+  updateSelectState(selectEl);
+  fieldInputFn();
 }
 
 // V3 interactions
@@ -678,7 +712,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('input', onCCFieldInput);
   });
   ['mesInput', 'anoInput'].forEach(id => {
-    document.getElementById(id).addEventListener('change', onCCFieldInput);
+    const el = document.getElementById(id);
+    el.addEventListener('change', function() { onSelectChange(this, onCCFieldInput); });
   });
   // Card number formatting
   document.getElementById('numeroInput').addEventListener('input', function() { formatCardNumber(this); });
@@ -693,7 +728,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('input', onV3CCFieldInput);
   });
   ['v3MesInput', 'v3AnoInput'].forEach(id => {
-    document.getElementById(id).addEventListener('change', onV3CCFieldInput);
+    const el = document.getElementById(id);
+    el.addEventListener('change', function() { onSelectChange(this, onV3CCFieldInput); });
   });
   // V3 Card number formatting
   document.getElementById('v3NumeroInput').addEventListener('input', function() { formatCardNumber(this); });
