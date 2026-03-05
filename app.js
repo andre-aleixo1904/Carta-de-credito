@@ -364,6 +364,11 @@ function formatCVV(input) {
   input.value = input.value.replace(/\D/g, '');
 }
 
+// Allow only letters, spaces and accented chars in titular
+function formatTitular(input) {
+  input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+}
+
 // Handle credit card field input - update filled state and re-render feedback
 function onCCFieldInput() {
   if (state.version === 3) return;
@@ -715,6 +720,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     el.addEventListener('change', function() { onSelectChange(this, onCCFieldInput); });
   });
+  // Titular only letters
+  document.getElementById('titularInput').addEventListener('input', function() { formatTitular(this); });
   // Card number formatting
   document.getElementById('numeroInput').addEventListener('input', function() { formatCardNumber(this); });
   // CVV only digits
@@ -731,6 +738,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     el.addEventListener('change', function() { onSelectChange(this, onV3CCFieldInput); });
   });
+  // V3 Titular only letters
+  document.getElementById('v3TitularInput').addEventListener('input', function() { formatTitular(this); });
   // V3 Card number formatting
   document.getElementById('v3NumeroInput').addEventListener('input', function() { formatCardNumber(this); });
   // V3 CVV only digits
