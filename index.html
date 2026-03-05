@@ -50,16 +50,43 @@
 
     </aside>
 
+    <!-- Scenarios Sidebar -->
+    <aside class="sidebar-scenarios">
+      <div class="sidebar-section">
+        <p class="sidebar-section-title">Cenários</p>
+
+        <button class="scenario-card active" data-scenario="1">
+          <span class="scenario-card-name">1 carta crédito total</span>
+          <span class="scenario-card-desc">1 carta cobre o valor total da reserva</span>
+        </button>
+
+        <button class="scenario-card" data-scenario="2">
+          <span class="scenario-card-name">2 cartas crédito total</span>
+          <span class="scenario-card-desc">2 cartas juntas cobrem o total</span>
+        </button>
+
+        <button class="scenario-card" data-scenario="4">
+          <span class="scenario-card-name">2 cartas sem crédito total</span>
+          <span class="scenario-card-desc">2 cartas não cobrem, pagamento adicional habilita</span>
+        </button>
+      </div>
+
+      <div class="scenario-detail" id="scenarioInfo"></div>
+    </aside>
+
     <!-- Main Content -->
     <main class="main-content">
-      <div class="scenario-nav-area">
-        <div class="scenario-nav-row">
-          <p class="scenario-nav-label">Cenários:</p>
-          <button class="scenario-btn active" data-scenario="1">1 carta crédito total</button>
-          <button class="scenario-btn" data-scenario="2">2 cartas com crédito total</button>
-          <button class="scenario-btn" data-scenario="4">2 cartas sem crédito total</button>
+      <div class="view-toggle-area">
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="desktop">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Desktop
+          </button>
+          <button class="view-toggle-btn" data-view="mobile">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            Mobile
+          </button>
         </div>
-        <div class="scenario-info-bar" id="scenarioInfo"></div>
       </div>
 
       <div class="card-container" id="cardContainer">
@@ -395,7 +422,7 @@
           <p class="feedback-subtitle" id="alertSubtitle">Você pode adicionar mais cartas.</p>
         </div>
       </div>
-    </div>
+      </div>
     </main>
   </div>
 

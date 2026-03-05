@@ -143,10 +143,111 @@ body {
   margin: 0;
 }
 
+/* Scenarios Sidebar */
+.sidebar-scenarios {
+  width: 240px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #ebebeb;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: fixed;
+  top: 0;
+  left: 260px;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+/* Scenario Cards */
+.scenario-card {
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scenario-card:hover {
+  border-color: #a6a6a6;
+}
+
+.scenario-card.active {
+  border-color: #047fe4;
+  background: #f0f7ff;
+}
+
+.scenario-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+}
+
+.scenario-card-desc {
+  font-size: 11px;
+  font-weight: 400;
+  color: #555;
+  line-height: 15px;
+}
+
+/* Scenario Detail (in sidebar) */
+.scenario-detail {
+  background: #f9f9f9;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #242424;
+}
+
+.scenario-detail .info-scenario-name {
+  font-weight: 700;
+  color: #047fe4;
+  font-size: 12px;
+}
+
+.scenario-detail .info-scenario-sep {
+  display: none;
+}
+
+.scenario-detail .info-scenario-desc {
+  color: #555;
+  font-size: 11px;
+}
+
+.scenario-detail .info-scenario-credits {
+  font-weight: 600;
+  color: #242424;
+  font-size: 12px;
+}
+
+.scenario-detail-line {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  line-height: 18px;
+}
+
+.scenario-detail-line strong {
+  color: #242424;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 500px;
   padding: 32px 40px;
   display: flex;
   flex-direction: column;
@@ -563,90 +664,51 @@ body {
   flex-shrink: 0;
 }
 
-/* Scenario Info Bar */
-.scenario-info-bar {
-  background: #eef6ff;
-  border: 1px solid #c4dff6;
-  border-radius: 6px;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  line-height: 20px;
-  color: #242424;
+/* (Scenario info bar moved to sidebar-scenarios as scenario-detail) */
+
+/* View Toggle (Desktop/Mobile) */
+.view-toggle-area {
   width: 692px;
   max-width: 100%;
+  margin-bottom: 24px;
 }
 
-.info-scenario-name {
-  font-weight: 700;
-  color: #047fe4;
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 2px;
 }
 
-.info-scenario-sep {
-  color: #d3d3d3;
-}
-
-.info-scenario-desc {
-  color: #555;
-}
-
-.info-scenario-credits {
-  font-weight: 600;
-  color: #242424;
-}
-
-/* Scenario Navigation Area */
-.scenario-nav-area {
-  width: 692px;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 100px;
-}
-
-.scenario-nav-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.scenario-nav-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #242424;
-  white-space: nowrap;
-}
-
-/* Scenario Buttons */
-.scenario-btn {
+.view-toggle-btn {
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
-  padding: 6px 12px;
-  border: 1px solid #d3d3d3;
-  border-radius: 20px;
+  padding: 5px 14px;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  color: #a6a6a6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.view-toggle-btn:hover {
+  color: #242424;
+}
+
+.view-toggle-btn.active {
   background: #ffffff;
   color: #242424;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.scenario-btn:hover {
-  background: #f5f5f5;
-  border-color: #a6a6a6;
-}
-
-.scenario-btn.active {
-  background: #047fe4;
-  color: #ffffff;
-  border-color: #047fe4;
-}
+/* (Scenario buttons moved to sidebar-scenarios as scenario-card) */
 
 /* Payment Type Selector (V3) */
 .payment-type-selector {
@@ -765,6 +827,151 @@ body {
   font-weight: 600;
   color: #242424;
   line-height: 20px;
+}
+
+/* ============================================================
+   MOBILE MODE
+   ============================================================ */
+
+/* Mobile phone frame */
+.mobile-mode .mobile-frame {
+  width: 375px;
+  height: 812px;
+  background: #ffffff;
+  border-radius: 40px;
+  border: 8px solid #1a1a1a;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 2px #333;
+  padding: 20px 0;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mobile-frame-notch {
+  display: none;
+}
+
+.mobile-mode .mobile-frame-notch {
+  display: block;
+  width: 120px;
+  height: 28px;
+  background: #1a1a1a;
+  border-radius: 0 0 16px 16px;
+  margin: -20px auto 12px;
+}
+
+.mobile-frame-content {
+  height: calc(812px - 20px - 20px - 28px - 12px);
+  overflow-y: auto;
+  padding: 12px 16px 16px;
+  background: #f5f5f5;
+}
+
+/* Hide scrollbar in mobile frame */
+.mobile-frame-content::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Card container in mobile mode */
+.mobile-mode .card-container {
+  width: 100%;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  padding: 16px;
+  gap: 16px;
+  background: #ffffff;
+}
+
+/* Card title smaller in mobile */
+.mobile-mode .card-title {
+  font-size: 17px;
+  line-height: 22px;
+}
+
+/* Align carta rows to top in mobile */
+.mobile-mode .carta-row {
+  align-items: flex-start;
+}
+
+.mobile-mode .forma-pagamento {
+  align-items: flex-start;
+}
+
+.mobile-mode .checkbox-wrapper {
+  margin-top: 2px;
+}
+
+/* Carta info: stack vertically in mobile */
+.mobile-mode .carta-info {
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-mode .carta-info .info-separator {
+  display: none;
+}
+
+.mobile-mode .carta-info .info-utilizar .info-separator {
+  display: none;
+}
+
+.mobile-mode .carta-info .info-gray {
+  font-size: 14px;
+}
+
+/* Credit card form in mobile */
+.mobile-mode .credit-card-form {
+  width: 100%;
+  padding-left: 28px;
+  padding-right: 0;
+}
+
+/* Payment type selector in mobile */
+.mobile-mode .payment-type-selector {
+  padding-left: 28px;
+  padding-right: 0;
+}
+
+.mobile-mode .payment-type-options {
+  flex-direction: column;
+}
+
+/* PIX section in mobile */
+.mobile-mode .pix-section {
+  padding-left: 28px;
+  padding-right: 0;
+}
+
+.mobile-mode .pix-content {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+/* Date fields in mobile */
+.mobile-mode .date-fields {
+  gap: 6px;
+}
+
+.mobile-mode .combo-box {
+  padding: 10px;
+}
+
+/* Feedback in mobile - inside card */
+.mobile-mode .feedback-success,
+.mobile-mode .feedback-alert {
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 0;
+  align-items: flex-start;
+}
+
+.mobile-mode .feedback-icon {
+  margin-top: 2px;
 }
 
 /* Transitions & Animations */

@@ -535,22 +535,60 @@ function renderFeedback() {
 function updateScenarioInfo(config) {
   const infoEl = document.getElementById('scenarioInfo');
   if (!infoEl) return;
-  const creditInfo = config.cartas.map(c => `Carta ${c.id}: R$ ${formatCurrency(c.creditoDisponivel)}`).join('  ·  ');
+  const creditLines = config.cartas.map(c => `<span class="scenario-detail-line">Carta ${c.id}: <strong>R$ ${formatCurrency(c.creditoDisponivel)}</strong></span>`).join('');
   infoEl.innerHTML = `
-    <span class="info-scenario-name">${config.name}</span>
-    <span class="info-scenario-sep">—</span>
-    <span class="info-scenario-desc">${config.description}</span>
-    <span class="info-scenario-sep">|</span>
-    <span class="info-scenario-credits">${creditInfo}</span>
-    <span class="info-scenario-sep">|</span>
-    <span class="info-scenario-credits">Reserva: R$ ${formatCurrency(TOTAL_RESERVA)}</span>
+    <span class="scenario-detail-line">Reserva: <strong>R$ ${formatCurrency(TOTAL_RESERVA)}</strong></span>
+    ${creditLines}
   `;
 }
 
 function updateNavButtons(activeIndex) {
-  document.querySelectorAll('.scenario-btn').forEach(btn => {
+  document.querySelectorAll('.scenario-card').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.scenario) === activeIndex);
   });
+}
+
+// ============================================================
+// VIEW MODE (Desktop / Mobile)
+// ============================================================
+
+function setViewMode(mode) {
+  const body = document.body;
+  const cardContainer = document.getElementById('cardContainer');
+
+  // Update toggle buttons
+  document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === mode);
+  });
+
+  if (mode === 'mobile') {
+    body.classList.add('mobile-mode');
+
+    // Create mobile frame if it doesn't exist
+    if (!document.getElementById('mobileFrame')) {
+      const frame = document.createElement('div');
+      frame.id = 'mobileFrame';
+      frame.className = 'mobile-frame';
+      frame.innerHTML = '<div class="mobile-frame-notch"></div><div class="mobile-frame-content" id="mobileFrameContent"></div>';
+
+      // Insert frame before card container
+      cardContainer.parentNode.insertBefore(frame, cardContainer);
+      const frameContent = document.getElementById('mobileFrameContent');
+
+      // Move card into frame
+      frameContent.appendChild(cardContainer);
+    }
+  } else {
+    body.classList.remove('mobile-mode');
+
+    // Move content back out of frame
+    const frame = document.getElementById('mobileFrame');
+    if (frame) {
+      const mainEl = document.querySelector('.main-content');
+      mainEl.appendChild(cardContainer);
+      frame.remove();
+    }
+  }
 }
 
 // ============================================================
@@ -570,13 +608,18 @@ function setVersion(v) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // View toggle (Desktop/Mobile)
+  document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => setViewMode(btn.dataset.view));
+  });
+
   // Version cards (sidebar)
   document.querySelectorAll('.version-card').forEach(btn => {
     btn.addEventListener('click', () => setVersion(parseInt(btn.dataset.version)));
   });
 
-  // Scenario buttons
-  document.querySelectorAll('.scenario-btn').forEach(btn => {
+  // Scenario cards (sidebar)
+  document.querySelectorAll('.scenario-card').forEach(btn => {
     btn.addEventListener('click', () => resetToScenario(parseInt(btn.dataset.scenario)));
   });
 
