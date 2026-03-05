@@ -228,7 +228,6 @@ body {
   border-radius: 4px;
   flex-shrink: 0;
   position: relative;
-  transition: all 0.2s ease;
 }
 
 .checkbox.default {
@@ -667,7 +666,6 @@ body {
   border: 1px solid #d3d3d3;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
   flex: 1;
 }
 
@@ -689,7 +687,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
 }
 
 .radio-circle.selected {
@@ -724,7 +721,6 @@ body {
 /* PIX Section (V3) */
 .pix-section {
   padding-left: 28px;
-  animation: slideDown 0.3s ease;
 }
 
 .pix-content {
@@ -771,26 +767,55 @@ body {
   line-height: 20px;
 }
 
-/* Animation */
+/* Transitions & Animations */
+
+/* Carta rows & payment rows - smooth opacity and selection */
 .carta-row {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.7s ease;
 }
 
+/* Checkboxes - smooth state change */
+.checkbox {
+  transition: background 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease;
+}
+
+/* Payment type options - smooth selection */
+.payment-type-option {
+  transition: border-color 0.7s ease, background 0.7s ease, box-shadow 0.7s ease;
+}
+
+/* Radio circles - smooth selection */
+.radio-circle {
+  transition: border-color 0.7s ease;
+}
+
+/* Feedback messages - soft fade in */
 .feedback-success,
 .feedback-alert {
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.7s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
+  from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Credit card form - soft slide in */
 .credit-card-form {
-  animation: slideDown 0.3s ease;
+  animation: slideDown 0.7s ease;
+}
+
+/* Payment type selector - soft slide in */
+.payment-type-selector {
+  animation: slideDown 0.7s ease;
+}
+
+/* PIX section - soft slide in */
+.pix-section {
+  animation: slideDown 0.7s ease;
 }
 
 @keyframes slideDown {
-  from { opacity: 0; max-height: 0; }
-  to { opacity: 1; max-height: 500px; }
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
