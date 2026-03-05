@@ -1,10 +1,8 @@
 /**
  * Seleção de Carta de Crédito - Protótipo Navegável
  *
- * V1: Cartão de crédito só habilita quando TODAS as cartas estão selecionadas
- * V2: Cartão de crédito habilita assim que QUALQUER carta é selecionada
- * V3: "Adicionar forma de pagamento" com tipos dinâmicos (Cartão, PIX, etc.)
- *     Habilita como V2, mas o usuário escolhe o tipo. Só 1 tipo de cada vez.
+ * "Adicionar forma de pagamento" com tipos dinâmicos (Cartão, PIX, etc.)
+ * Habilita assim que qualquer carta é selecionada. Só 1 tipo de cada vez.
  */
 
 // ============================================================
@@ -13,7 +11,6 @@
 
 const TOTAL_RESERVA = 11000;
 
-// V3: Dynamic payment types configuration
 const PAYMENT_TYPES = [
   {
     id: 'credit-card',
@@ -28,22 +25,13 @@ const PAYMENT_TYPES = [
 ];
 
 const state = {
-  version: 3,
   currentScenario: 1,
   cartas: [],
-  // V1/V2 credit card state
-  creditCard: {
-    enabled: false,
-    selected: false,
-    filled: false,
-    valorPagar: 0,
-  },
-  // V3 additional payment state
   additionalPayment: {
     enabled: false,
-    selected: false,         // row selected (expanded)
-    selectedType: null,      // 'credit-card' | 'pix' | null
-    filled: false,           // payment info filled
+    selected: false,
+    selectedType: null,
+    filled: false,
     valorPagar: 0,
   },
 };
@@ -86,11 +74,8 @@ function resetToScenario(index) {
     selected: false, disabled: false, utilizar: 0,
   }));
 
-  state.creditCard = { enabled: false, selected: false, filled: false, valorPagar: 0 };
   state.additionalPayment = { enabled: false, selected: false, selectedType: null, filled: false, valorPagar: 0 };
-
   clearCCFields();
-  clearV3CCFields();
 
   render();
   updateNavButtons(index);
@@ -98,7 +83,6 @@ function resetToScenario(index) {
 }
 
 function recalculate() {
-  // Recalculate "A utilizar" for all selected cartas in order
   let used = 0;
   state.cartas.forEach(c => {
     if (c.selected) {
@@ -123,61 +107,26 @@ function recalculate() {
   const fullyCovered = remaining <= 0;
   const anySelected = state.cartas.some(c => c.selected);
 
-  // Update disabled state for non-selected cartas
   state.cartas.forEach(c => {
     if (!c.selected) c.disabled = fullyCovered;
   });
 
-  if (state.version === 3) {
-    // V3: same enabling logic as V2 but for additional payment
-    if (fullyCovered) {
-      state.additionalPayment.enabled = false;
-      state.additionalPayment.selected = false;
-      state.additionalPayment.selectedType = null;
-      state.additionalPayment.filled = false;
-      state.additionalPayment.valorPagar = 0;
-      clearV3CCFields();
-    } else if (anySelected) {
-      state.additionalPayment.enabled = true;
-      state.additionalPayment.valorPagar = remaining;
-    } else {
-      state.additionalPayment.enabled = false;
-      state.additionalPayment.selected = false;
-      state.additionalPayment.selectedType = null;
-      state.additionalPayment.filled = false;
-      state.additionalPayment.valorPagar = 0;
-    }
-  } else if (state.version === 2) {
-    // V2: credit card enables as soon as any carta is selected
-    if (fullyCovered) {
-      state.creditCard.enabled = false;
-      if (!state.creditCard.selected) state.creditCard.valorPagar = 0;
-    } else if (anySelected) {
-      state.creditCard.enabled = true;
-      state.creditCard.valorPagar = remaining;
-    } else {
-      state.creditCard.enabled = false;
-      state.creditCard.selected = false;
-      state.creditCard.filled = false;
-      state.creditCard.valorPagar = 0;
-    }
+  if (fullyCovered) {
+    state.additionalPayment.enabled = false;
+    state.additionalPayment.selected = false;
+    state.additionalPayment.selectedType = null;
+    state.additionalPayment.filled = false;
+    state.additionalPayment.valorPagar = 0;
+    clearCCFields();
+  } else if (anySelected) {
+    state.additionalPayment.enabled = true;
+    state.additionalPayment.valorPagar = remaining;
   } else {
-    // V1: credit card only enables when ALL cartas are selected
-    if (fullyCovered) {
-      state.creditCard.enabled = false;
-      if (!state.creditCard.selected) state.creditCard.valorPagar = 0;
-    } else {
-      const allCartasSelected = state.cartas.every(c => c.selected);
-      if (allCartasSelected) {
-        state.creditCard.enabled = true;
-        state.creditCard.valorPagar = remaining;
-      } else {
-        state.creditCard.enabled = false;
-        state.creditCard.selected = false;
-        state.creditCard.filled = false;
-        state.creditCard.valorPagar = remaining;
-      }
-    }
+    state.additionalPayment.enabled = false;
+    state.additionalPayment.selected = false;
+    state.additionalPayment.selectedType = null;
+    state.additionalPayment.filled = false;
+    state.additionalPayment.valorPagar = 0;
   }
 
   render();
@@ -194,43 +143,24 @@ function calculateFeedback() {
     return { type: 'success', title: 'Pagamento totalmente coberto com cartas de crédito.', subtitle: 'Você pode finalizar sua reserva.' };
   }
 
-  // V3 feedback
-  if (state.version === 3) {
-    const ap = state.additionalPayment;
-    if (ap.selected && ap.filled) {
-      const typeName = ap.selectedType === 'pix' ? 'Pix' : 'cartão de crédito';
-      return { type: 'success', title: `Pagamento totalmente coberto com cartas de crédito e ${typeName}.`, subtitle: 'Você pode finalizar sua reserva.' };
-    }
-    if (ap.selected && ap.selectedType === 'credit-card' && !ap.filled) {
-      return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Preencha todos os dados do cartão de crédito.' };
-    }
-    if (ap.selected && ap.selectedType && !ap.filled) {
-      return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Complete os dados da forma de pagamento selecionada.' };
-    }
-    if (ap.selected && !ap.selectedType) {
-      return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Selecione uma forma de pagamento adicional.' };
-    }
-    if (ap.enabled) {
-      return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Você pode adicionar outra forma de pagamento.' };
-    }
-    return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Você pode adicionar mais cartas ou outra forma de pagamento.' };
+  const ap = state.additionalPayment;
+  if (ap.selected && ap.filled) {
+    const typeName = ap.selectedType === 'pix' ? 'Pix' : 'cartão de crédito';
+    return { type: 'success', title: `Pagamento totalmente coberto com cartas de crédito e ${typeName}.`, subtitle: 'Você pode finalizar sua reserva.' };
   }
-
-  // V1/V2 feedback
-  if (state.creditCard.selected && state.creditCard.filled) {
-    return { type: 'success', title: 'Pagamento totalmente coberto com cartas de crédito e cartão de crédito.', subtitle: 'Você pode finalizar sua reserva.' };
-  }
-  if (state.creditCard.selected && !state.creditCard.filled) {
+  if (ap.selected && ap.selectedType === 'credit-card' && !ap.filled) {
     return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Preencha todos os dados do cartão de crédito.' };
   }
-  if (state.creditCard.enabled) {
-    return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Você pode pagar o restante com cartão de crédito.' };
+  if (ap.selected && ap.selectedType && !ap.filled) {
+    return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Complete os dados da forma de pagamento selecionada.' };
   }
-  return {
-    type: 'alert',
-    title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`,
-    subtitle: state.version === 2 ? 'Você pode adicionar mais cartas ou pagar com cartão de crédito.' : 'Você pode adicionar mais cartas.',
-  };
+  if (ap.selected && !ap.selectedType) {
+    return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Selecione uma forma de pagamento adicional.' };
+  }
+  if (ap.enabled) {
+    return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Você pode adicionar outra forma de pagamento.' };
+  }
+  return { type: 'alert', title: `Ainda faltam R$ ${formatCurrency(remaining)} para concluir o pagamento.`, subtitle: 'Você pode adicionar mais cartas ou outra forma de pagamento.' };
 }
 
 // ============================================================
@@ -250,50 +180,51 @@ function toggleCarta(id) {
     carta.utilizar = Math.min(carta.creditoDisponivel, Math.max(0, remaining));
   } else {
     carta.utilizar = 0;
-    // Only reset payment sections if no cartas remain selected
     const anyStillSelected = state.cartas.some(c => c.id !== id && c.selected);
     if (!anyStillSelected) {
-      state.creditCard.selected = false;
-      state.creditCard.filled = false;
-      clearCCFields();
       state.additionalPayment.selected = false;
       state.additionalPayment.selectedType = null;
       state.additionalPayment.filled = false;
-      clearV3CCFields();
+      clearCCFields();
     }
   }
 
   recalculate();
 }
 
-function toggleCreditCard() {
-  if (state.version === 3) return;
-  const cc = state.creditCard;
-  if (!cc.enabled && !cc.selected) return;
-  cc.selected = !cc.selected;
-  if (!cc.selected) {
-    cc.filled = false;
+function toggleV3Payment() {
+  const ap = state.additionalPayment;
+  if (!ap.enabled && !ap.selected) return;
+  ap.selected = !ap.selected;
+  if (!ap.selected) {
+    ap.selectedType = null;
+    ap.filled = false;
     clearCCFields();
   }
   render();
 }
 
-// Check if all V1/V2 credit card fields are filled
-function areCCFieldsFilled() {
-  const titular = document.getElementById('titularInput');
-  const numero = document.getElementById('numeroInput');
-  const mes = document.getElementById('mesInput');
-  const ano = document.getElementById('anoInput');
-  const cvv = document.getElementById('cvvInput');
-  return titular.value.trim() !== '' &&
-         numero.value.replace(/\s/g, '').length >= 13 &&
-         mes.value !== '' &&
-         ano.value !== '' &&
-         cvv.value.trim().length >= 3;
+function selectPaymentType(typeId) {
+  const ap = state.additionalPayment;
+  if (!ap.selected) return;
+
+  if (ap.selectedType === typeId) {
+    ap.selectedType = null;
+    ap.filled = false;
+    clearCCFields();
+  } else {
+    ap.selectedType = typeId;
+    clearCCFields();
+    ap.filled = (typeId === 'pix');
+  }
+  render();
 }
 
-// Check if all V3 credit card fields are filled
-function areV3CCFieldsFilled() {
+// ============================================================
+// CREDIT CARD FORM HELPERS
+// ============================================================
+
+function areCCFieldsFilled() {
   const titular = document.getElementById('v3TitularInput');
   const numero = document.getElementById('v3NumeroInput');
   const mes = document.getElementById('v3MesInput');
@@ -306,22 +237,7 @@ function areV3CCFieldsFilled() {
          cvv.value.trim().length >= 3;
 }
 
-// Clear V1/V2 credit card fields
 function clearCCFields() {
-  ['titularInput', 'numeroInput', 'cvvInput'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  ['mesInput', 'anoInput'].forEach(id => {
-    const el = document.getElementById(id);
-    el.selectedIndex = 0;
-    el.classList.remove('has-value');
-  });
-  const badge = document.getElementById('numeroBadge');
-  if (badge) badge.style.display = 'none';
-}
-
-// Clear V3 credit card fields
-function clearV3CCFields() {
   ['v3TitularInput', 'v3NumeroInput', 'v3CvvInput'].forEach(id => {
     document.getElementById(id).value = '';
   });
@@ -334,7 +250,6 @@ function clearV3CCFields() {
   if (badge) badge.style.display = 'none';
 }
 
-// Update select visual state (floating label)
 function updateSelectState(selectEl) {
   if (selectEl.value) {
     selectEl.classList.add('has-value');
@@ -343,7 +258,6 @@ function updateSelectState(selectEl) {
   }
 }
 
-// Update card number badge visibility
 function updateCardBadge(inputEl, badgeId) {
   const badge = document.getElementById(badgeId);
   if (!badge) return;
@@ -351,7 +265,6 @@ function updateCardBadge(inputEl, badgeId) {
   badge.style.display = digits.length >= 4 ? 'flex' : 'none';
 }
 
-// Format card number with spaces (0000 0000 0000 0000)
 function formatCardNumber(input) {
   let value = input.value.replace(/\D/g, '');
   value = value.substring(0, 16);
@@ -359,69 +272,24 @@ function formatCardNumber(input) {
   input.value = value;
 }
 
-// Allow only digits in CVV
 function formatCVV(input) {
   input.value = input.value.replace(/\D/g, '');
 }
 
-// Allow only letters, spaces and accented chars in titular
 function formatTitular(input) {
   input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
 }
 
-// Handle credit card field input - update filled state and re-render feedback
 function onCCFieldInput() {
-  if (state.version === 3) return;
-  updateCardBadge(document.getElementById('numeroInput'), 'numeroBadge');
-  state.creditCard.filled = areCCFieldsFilled();
-  renderFeedback();
-}
-
-function onV3CCFieldInput() {
-  if (state.version !== 3) return;
   updateCardBadge(document.getElementById('v3NumeroInput'), 'v3NumeroBadge');
-  state.additionalPayment.filled = areV3CCFieldsFilled();
+  state.additionalPayment.filled = areCCFieldsFilled();
   renderFeedback();
 }
 
-function onSelectChange(selectEl, fieldInputFn) {
+function onSelectChange(selectEl) {
   updateSelectState(selectEl);
-  fieldInputFn();
+  onCCFieldInput();
 }
-
-// V3 interactions
-function toggleV3Payment() {
-  if (state.version !== 3) return;
-  const ap = state.additionalPayment;
-  if (!ap.enabled && !ap.selected) return;
-  ap.selected = !ap.selected;
-  if (!ap.selected) {
-    ap.selectedType = null;
-    ap.filled = false;
-    clearV3CCFields();
-  }
-  render();
-}
-
-function selectPaymentType(typeId) {
-  if (state.version !== 3) return;
-  const ap = state.additionalPayment;
-  if (!ap.selected) return;
-
-  if (ap.selectedType === typeId) {
-    // Deselect
-    ap.selectedType = null;
-    ap.filled = false;
-    clearV3CCFields();
-  } else {
-    ap.selectedType = typeId;
-    clearV3CCFields();
-    // PIX is considered filled immediately (QR generated on purchase)
-    ap.filled = (typeId === 'pix');
-  }
-  render();
-}
-
 
 // ============================================================
 // RENDER
@@ -430,19 +298,9 @@ function selectPaymentType(typeId) {
 function render() {
   state.cartas.forEach(carta => renderCarta(carta));
 
-  // Show/hide V1V2 vs V3 sections
-  const ccSection = document.getElementById('creditCardSection');
   const v3Section = document.getElementById('v3PaymentSection');
-
-  if (state.version === 3) {
-    ccSection.style.display = 'none';
-    v3Section.style.display = 'flex';
-    renderV3Payment();
-  } else {
-    ccSection.style.display = 'flex';
-    v3Section.style.display = 'none';
-    renderCreditCard(state.creditCard);
-  }
+  v3Section.style.display = 'flex';
+  renderV3Payment();
 
   renderFeedback();
 }
@@ -471,40 +329,6 @@ function renderCarta(carta) {
   }
 }
 
-function renderCreditCard(cc) {
-  const cbCC = document.getElementById('cbCC');
-  const ccRow = document.getElementById('creditCardRow');
-  const ccLabel = document.getElementById('ccLabel');
-  const ccLabelActive = document.getElementById('ccLabelActive');
-  const iconAdd = document.getElementById('iconAdd');
-  const iconAddActive = document.getElementById('iconAddActive');
-  const ccForm = document.getElementById('creditCardForm');
-  const ccValorPagar = document.getElementById('ccValorPagar');
-
-  cbCC.className = 'checkbox';
-  if (cc.selected) cbCC.classList.add('selected');
-  else if (cc.enabled) cbCC.classList.add('default');
-  else cbCC.classList.add('disabled');
-
-  ccRow.classList.toggle('disabled-row', !cc.enabled && !cc.selected);
-
-  if (cc.enabled || cc.selected) {
-    ccLabel.style.display = 'none';
-    ccLabelActive.style.display = 'block';
-    iconAdd.style.display = 'none';
-    iconAddActive.style.display = 'block';
-    ccValorPagar.textContent = formatCurrency(cc.valorPagar);
-  } else {
-    ccLabel.style.display = 'block';
-    ccLabelActive.style.display = 'none';
-    iconAdd.style.display = 'block';
-    iconAddActive.style.display = 'none';
-  }
-
-  ccForm.style.display = cc.selected ? 'flex' : 'none';
-}
-
-// V3 Render
 function renderV3Payment() {
   const ap = state.additionalPayment;
   const cbV3 = document.getElementById('cbV3');
@@ -518,7 +342,6 @@ function renderV3Payment() {
   const v3CCForm = document.getElementById('v3CreditCardForm');
   const v3PixSection = document.getElementById('v3PixSection');
 
-  // Checkbox
   cbV3.className = 'checkbox';
   if (ap.selected) cbV3.classList.add('selected');
   else if (ap.enabled) cbV3.classList.add('default');
@@ -526,7 +349,6 @@ function renderV3Payment() {
 
   v3Row.classList.toggle('disabled-row', !ap.enabled && !ap.selected);
 
-  // Labels
   if (ap.enabled || ap.selected) {
     v3Label.style.display = 'none';
     v3LabelActive.style.display = 'block';
@@ -540,7 +362,6 @@ function renderV3Payment() {
     iconV3Active.style.display = 'none';
   }
 
-  // Type selector
   if (ap.selected) {
     typeSelector.style.display = 'block';
     renderPaymentTypeOptions();
@@ -548,7 +369,6 @@ function renderV3Payment() {
     typeSelector.style.display = 'none';
   }
 
-  // Payment forms
   v3CCForm.style.display = (ap.selected && ap.selectedType === 'credit-card') ? 'flex' : 'none';
   v3PixSection.style.display = (ap.selected && ap.selectedType === 'pix') ? 'flex' : 'none';
 
@@ -574,7 +394,6 @@ function renderPaymentTypeOptions() {
     `;
   }).join('');
 
-  // Re-bind click events
   container.querySelectorAll('.payment-type-option').forEach(el => {
     el.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -638,7 +457,6 @@ function setViewMode(mode) {
   const body = document.body;
   const cardContainer = document.getElementById('cardContainer');
 
-  // Update toggle buttons
   document.querySelectorAll('.view-toggle-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === mode);
   });
@@ -646,24 +464,19 @@ function setViewMode(mode) {
   if (mode === 'mobile') {
     body.classList.add('mobile-mode');
 
-    // Create mobile frame if it doesn't exist
     if (!document.getElementById('mobileFrame')) {
       const frame = document.createElement('div');
       frame.id = 'mobileFrame';
       frame.className = 'mobile-frame';
       frame.innerHTML = '<div class="mobile-frame-notch"></div><div class="mobile-frame-content" id="mobileFrameContent"></div>';
 
-      // Insert frame before card container
       cardContainer.parentNode.insertBefore(frame, cardContainer);
       const frameContent = document.getElementById('mobileFrameContent');
-
-      // Move card into frame
       frameContent.appendChild(cardContainer);
     }
   } else {
     body.classList.remove('mobile-mode');
 
-    // Move content back out of frame
     const frame = document.getElementById('mobileFrame');
     if (frame) {
       const mainEl = document.querySelector('.main-content');
@@ -671,18 +484,6 @@ function setViewMode(mode) {
       frame.remove();
     }
   }
-}
-
-// ============================================================
-// VERSION
-// ============================================================
-
-function setVersion(v) {
-  state.version = v;
-  document.querySelectorAll('.version-card').forEach(btn => {
-    btn.classList.toggle('active', parseInt(btn.dataset.version) === v);
-  });
-  resetToScenario(state.currentScenario);
 }
 
 // ============================================================
@@ -695,11 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => setViewMode(btn.dataset.view));
   });
 
-  // Version cards (sidebar)
-  document.querySelectorAll('.version-card').forEach(btn => {
-    btn.addEventListener('click', () => setVersion(parseInt(btn.dataset.version)));
-  });
-
   // Scenario cards (sidebar)
   document.querySelectorAll('.scenario-card').forEach(btn => {
     btn.addEventListener('click', () => resetToScenario(parseInt(btn.dataset.scenario)));
@@ -709,46 +505,27 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('carta442Row').addEventListener('click', () => toggleCarta('442'));
   document.getElementById('carta469Row').addEventListener('click', () => toggleCarta('469'));
 
-  // V1/V2: Credit Card
-  document.getElementById('creditCardRow').addEventListener('click', () => toggleCreditCard());
-
-  // V1/V2: Credit card field input listeners
-  ['titularInput', 'numeroInput', 'cvvInput'].forEach(id => {
-    document.getElementById(id).addEventListener('input', onCCFieldInput);
-  });
-  ['mesInput', 'anoInput'].forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener('change', function() { onSelectChange(this, onCCFieldInput); });
-  });
-  // Titular only letters
-  document.getElementById('titularInput').addEventListener('input', function() { formatTitular(this); });
-  // Card number formatting
-  document.getElementById('numeroInput').addEventListener('input', function() { formatCardNumber(this); });
-  // CVV only digits
-  document.getElementById('cvvInput').addEventListener('input', function() { formatCVV(this); });
-
-  // V3: Additional Payment
+  // Additional Payment
   document.getElementById('v3PaymentRow').addEventListener('click', () => toggleV3Payment());
 
-  // V3: Credit card field input listeners
+  // Credit card field input listeners
   ['v3TitularInput', 'v3NumeroInput', 'v3CvvInput'].forEach(id => {
-    document.getElementById(id).addEventListener('input', onV3CCFieldInput);
+    document.getElementById(id).addEventListener('input', onCCFieldInput);
   });
   ['v3MesInput', 'v3AnoInput'].forEach(id => {
     const el = document.getElementById(id);
-    el.addEventListener('change', function() { onSelectChange(this, onV3CCFieldInput); });
+    el.addEventListener('change', function() { onSelectChange(this); });
   });
-  // V3 Titular only letters
+  // Titular only letters
   document.getElementById('v3TitularInput').addEventListener('input', function() { formatTitular(this); });
-  // V3 Card number formatting
+  // Card number formatting
   document.getElementById('v3NumeroInput').addEventListener('input', function() { formatCardNumber(this); });
-  // V3 CVV only digits
+  // CVV only digits
   document.getElementById('v3CvvInput').addEventListener('input', function() { formatCVV(this); });
 
-  // Stop click propagation on forms so they don't trigger row toggle
-  document.getElementById('creditCardForm').addEventListener('click', (e) => e.stopPropagation());
+  // Stop click propagation on form
   document.getElementById('v3CreditCardForm').addEventListener('click', (e) => e.stopPropagation());
 
-  // Initialize with V3 (Final) as default
-  setVersion(3);
+  // Initialize
+  resetToScenario(1);
 });
